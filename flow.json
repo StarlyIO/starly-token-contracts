@@ -1,0 +1,113 @@
+{
+  "emulators": {
+    "default": {
+      "port": 3569,
+      "serviceAccount": "emulator-account"
+    }
+  },
+  "contracts": {
+    "StarlyToken": {
+      "source": "./contracts/flow/token/StarlyToken.cdc",
+      "aliases": {
+        "testnet": "0xf63219072aaddd50"
+      }
+    },
+    "FungibleToken": {
+      "source": "./contracts/flow/token/FungibleToken.cdc",
+      "aliases": {
+        "emulator": "0xee82856bf20e2aa6",
+        "testnet": "0x9a0766d93b6608b7",
+        "mainnet": "0xf233dcee88fe0abe"
+      }
+    },
+    "TeleportCustodyBSC": {
+      "source": "./contracts/flow/teleport/TeleportCustodyBSC.cdc",
+      "aliases": {
+        "testnet": "0xe0667c34b3a9d731"
+      }
+    },
+    "TeleportCustodyEthereum": {
+      "source": "./contracts/flow/teleport/TeleportCustodyEthereum.cdc",
+      "aliases": {
+        "testnet": "0xe0667c34b3a9d731"
+      }
+    },
+    "TeleportCustodySolana": {
+      "source": "./contracts/flow/teleport/TeleportCustodySolana.cdc",
+      "aliases": {
+        "testnet": "0xe0667c34b3a9d731"
+      }
+    }
+  },
+  "networks": {
+    "emulator": {
+      "host": "127.0.0.1:3569",
+      "chain": "flow-emulator"
+    },
+    "testnet": {
+      "host": "access.devnet.nodes.onflow.org:9000",
+      "chain": "flow-testnet"
+    },
+    "mainnet": {
+      "host": "access.mainnet.nodes.onflow.org:9000",
+      "chain": "flow-mainnet"
+    }
+  },
+  "accounts": {
+    "emulator-account": {
+      "address": "f8d6e0586b0a20c7",
+      "keys": "4c13162bd35758146b7908ddb3a1d001dbe961ec422f96045524a0099e9ff083",
+      "chain": "flow-emulator"
+    },
+    "starly-emulator": {
+      "address": "f8d6e0586b0a20c7",
+      "keys": "4c13162bd35758146b7908ddb3a1d001dbe961ec422f96045524a0099e9ff083",
+      "chain": "flow-emulator"
+    },
+    "starly-user-emulator": {
+      "address": "01cf0e2f2f715450",
+      "keys": "d79d5463297ad3dced6f5fd71feb7c3e991e9f315d64b5ec717087ee8758c9e7",
+      "chain": "flow-emulator"
+    },
+    "starly-testnet": {
+      "address": "f63219072aaddd50",
+      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
+      "chain": "flow-testnet"
+    },
+    "starly-testnet-holder": {
+      "address": "0x2c662219431fe24b",
+      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
+      "chain": "flow-testnet"
+    },
+    "starly-teleport-testnet": {
+      "address": "e0667c34b3a9d731",
+      "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a",
+      "chain": "flow-testnet"
+    },
+    "starly-teleport-admin-testnet": {
+      "address": "f086a545ce3c552d",
+      "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a",
+      "chain": "flow-testnet"
+    }
+  },
+  "deployments": {
+    "emulator": {
+      "starly-emulator": [
+        "StarlyToken",
+        "TeleportCustodyBSC",
+        "TeleportCustodyEthereum",
+        "TeleportCustodySolana"
+      ]
+    },
+    "testnet": {
+      "starly-testnet": [
+        "StarlyToken"
+      ],
+      "starly-teleport-testnet": [
+        "TeleportCustodyBSC",
+        "TeleportCustodyEthereum",
+        "TeleportCustodySolana"
+      ]
+    }
+  }
+}
