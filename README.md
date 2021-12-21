@@ -1,15 +1,15 @@
 # Flow Contract addresses
 
-| Contract                | Testnet              | Mainnet |
-|-------------------------|----------------------|---------|
-| StarlyToken             | `0xf63219072aaddd50` | `TBD`   |
-| TeleportCustodyBSC      | `0xe0667c34b3a9d731` | `TBD`   |
-| TeleportCustodyEthereum | `0xe0667c34b3a9d731` | `TBD`   |
-| TeleportCustodySolana   | `0xe0667c34b3a9d731` | `TBD`   |
+| Contract                | Testnet              | Mainnet              |
+|-------------------------|----------------------|----------------------|
+| StarlyToken             | `0xf63219072aaddd50` | `0x142fa6570b62fd97` |
+| TeleportCustodyBSC      | `0xe0667c34b3a9d731` | `0xc2fa71c36fd5b840` |
+| TeleportCustodyEthereum | `0xe0667c34b3a9d731` | `0xc2fa71c36fd5b840` |
+| TeleportCustodySolana   | `0xe0667c34b3a9d731` | `0xc2fa71c36fd5b840` |
 
 # BSC Contract addresses
 
-| Contract        | Testnet                                      | Mainnet |
-|-----------------|----------------------------------------------|---------|
-| Token           | `0xb0A480E2FA5AF51C733a0Af9FcB4De62Bc48c38B` | `TBD`   |
-| TeleportCustody | `0x58dc2aFB680845Fb93514cecf75F7008e9e6Cacf` | `TBD`   |
+| Contract        | Testnet                                      | Mainnet                                      |
+|-----------------|----------------------------------------------|----------------------------------------------|
+| Token           | `0xb0A480E2FA5AF51C733a0Af9FcB4De62Bc48c38B` | `0xb0A480E2FA5AF51C733a0Af9FcB4De62Bc48c38B` |
+| TeleportCustody | `0x58dc2aFB680845Fb93514cecf75F7008e9e6Cacf` | `0x58dc2aFB680845Fb93514cecf75F7008e9e6Cacf` |
