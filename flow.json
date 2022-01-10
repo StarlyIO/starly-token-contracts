@@ -9,7 +9,8 @@
     "StarlyToken": {
       "source": "./contracts/flow/token/StarlyToken.cdc",
       "aliases": {
-        "testnet": "0xf63219072aaddd50"
+        "testnet": "0xf63219072aaddd50",
+        "mainnet": "0x142fa6570b62fd97"
       }
     },
     "FungibleToken": {
@@ -23,19 +24,22 @@
     "TeleportCustodyBSC": {
       "source": "./contracts/flow/teleport/TeleportCustodyBSC.cdc",
       "aliases": {
-        "testnet": "0xe0667c34b3a9d731"
+        "testnet": "0xe0667c34b3a9d731",
+        "mainnet": "0xc2fa71c36fd5b840"
       }
     },
     "TeleportCustodyEthereum": {
       "source": "./contracts/flow/teleport/TeleportCustodyEthereum.cdc",
       "aliases": {
-        "testnet": "0xe0667c34b3a9d731"
+        "testnet": "0xe0667c34b3a9d731",
+        "mainnet": "0xc2fa71c36fd5b840"
       }
     },
     "TeleportCustodySolana": {
       "source": "./contracts/flow/teleport/TeleportCustodySolana.cdc",
       "aliases": {
-        "testnet": "0xe0667c34b3a9d731"
+        "testnet": "0xe0667c34b3a9d731",
+        "mainnet": "0xc2fa71c36fd5b840"
       }
     }
   },
