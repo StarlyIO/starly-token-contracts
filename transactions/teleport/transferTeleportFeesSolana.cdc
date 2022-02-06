@@ -1,6 +1,6 @@
-import FungibleToken from "../../contracts/flow/token/FungibleToken.cdc"
-import StarlyToken from "../../contracts/flow/token/StarlyToken.cdc"
-import TeleportCustodySolana from "../../contracts/flow/teleport/TeleportCustodySolana.cdc"
+import FungibleToken from "../../contracts/flow/contracts/flow/token/FungibleToken.cdc"
+import StarlyToken from "../../contracts/flow/contracts/flow/token/StarlyToken.cdc"
+import TeleportCustodySolana from "../../contracts/flow/contracts/TeleportCustodySolana.cdc"
 
 transaction(target: Address) {
   // The teleport admin reference

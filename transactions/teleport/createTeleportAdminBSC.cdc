@@ -1,4 +1,4 @@
-import TeleportCustodyBSC from "../../contracts/flow/teleport/TeleportCustodyBSC.cdc"
+import TeleportCustodyBSC from "../../contracts/flow/contracts/TeleportCustodyBSC.cdc"
 
 transaction(allowedAmount: UFix64) {
 

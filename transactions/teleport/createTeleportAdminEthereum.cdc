@@ -1,4 +1,4 @@
-import TeleportCustodyEthereum from "../../contracts/flow/teleport/TeleportCustodyEthereum.cdc"
+import TeleportCustodyEthereum from "../../contracts/flow/contracts/TeleportCustodyEthereum.cdc"
 
 transaction(allowedAmount: UFix64) {
 

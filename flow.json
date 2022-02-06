@@ -6,37 +6,56 @@
     }
   },
   "contracts": {
-    "StarlyToken": {
-      "source": "./contracts/flow/token/StarlyToken.cdc",
+    "CompoundInterest": {
+      "source": "./contracts/flow/contracts/CompoundInterest.cdc",
       "aliases": {
-        "testnet": "0xf63219072aaddd50",
-        "mainnet": "0x142fa6570b62fd97"
+        "testnet": "0x8d1cf508d398c5c2"
       }
     },
     "FungibleToken": {
-      "source": "./contracts/flow/token/FungibleToken.cdc",
+      "source": "./contracts/flow/contracts/FungibleToken.cdc",
       "aliases": {
         "emulator": "0xee82856bf20e2aa6",
         "testnet": "0x9a0766d93b6608b7",
         "mainnet": "0xf233dcee88fe0abe"
       }
     },
+    "NonFungibleToken": {
+      "source": "./contracts/flow/contracts/NonFungibleToken.cdc",
+      "aliases": {
+        "testnet": "0x631e88ae7f1d7c20",
+        "mainnet": "0x1d7e57aa55817448"
+      }
+    },
+    "StarlyToken": {
+      "source": "./contracts/flow/contracts/StarlyToken.cdc",
+      "aliases": {
+        "testnet": "0xf63219072aaddd50",
+        "mainnet": "0x142fa6570b62fd97"
+      }
+    },
+    "StarlyTokenStaking": {
+      "source": "./contracts/flow/contracts/StarlyTokenStaking.cdc",
+      "aliases": {
+        "testnet": "0x8d1cf508d398c5c2"
+      }
+    },
     "TeleportCustodyBSC": {
-      "source": "./contracts/flow/teleport/TeleportCustodyBSC.cdc",
+      "source": "./contracts/flow/contracts/TeleportCustodyBSC.cdc",
       "aliases": {
         "testnet": "0xe0667c34b3a9d731",
         "mainnet": "0xc2fa71c36fd5b840"
       }
     },
     "TeleportCustodyEthereum": {
-      "source": "./contracts/flow/teleport/TeleportCustodyEthereum.cdc",
+      "source": "./contracts/flow/contracts/TeleportCustodyEthereum.cdc",
       "aliases": {
         "testnet": "0xe0667c34b3a9d731",
         "mainnet": "0xc2fa71c36fd5b840"
       }
     },
     "TeleportCustodySolana": {
-      "source": "./contracts/flow/teleport/TeleportCustodySolana.cdc",
+      "source": "./contracts/flow/contracts/TeleportCustodySolana.cdc",
       "aliases": {
         "testnet": "0xe0667c34b3a9d731",
         "mainnet": "0xc2fa71c36fd5b840"
@@ -59,22 +78,27 @@
   },
   "accounts": {
     "emulator-account": {
-      "address": "f8d6e0586b0a20c7",
+      "address": "0xf8d6e0586b0a20c7",
       "keys": "4c13162bd35758146b7908ddb3a1d001dbe961ec422f96045524a0099e9ff083",
       "chain": "flow-emulator"
     },
     "starly-emulator": {
-      "address": "f8d6e0586b0a20c7",
+      "address": "0xf8d6e0586b0a20c7",
       "keys": "4c13162bd35758146b7908ddb3a1d001dbe961ec422f96045524a0099e9ff083",
       "chain": "flow-emulator"
     },
     "starly-user-emulator": {
-      "address": "01cf0e2f2f715450",
+      "address": "0x01cf0e2f2f715450",
       "keys": "d79d5463297ad3dced6f5fd71feb7c3e991e9f315d64b5ec717087ee8758c9e7",
       "chain": "flow-emulator"
     },
     "starly-testnet": {
-      "address": "f63219072aaddd50",
+      "address": "0xf63219072aaddd50",
+      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
+      "chain": "flow-testnet"
+    },
+    "starly-staking-testnet": {
+      "address": "0x8d1cf508d398c5c2",
       "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
       "chain": "flow-testnet"
     },
@@ -84,12 +108,12 @@
       "chain": "flow-testnet"
     },
     "starly-teleport-testnet": {
-      "address": "e0667c34b3a9d731",
+      "address": "0xe0667c34b3a9d731",
       "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a",
       "chain": "flow-testnet"
     },
     "starly-teleport-admin-testnet": {
-      "address": "f086a545ce3c552d",
+      "address": "0xf086a545ce3c552d",
       "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a",
       "chain": "flow-testnet"
     }
@@ -97,7 +121,10 @@
   "deployments": {
     "emulator": {
       "starly-emulator": [
+        "CompoundInterest",
+        "NonFungibleToken",
         "StarlyToken",
+        "StarlyTokenStaking",
         "TeleportCustodyBSC",
         "TeleportCustodyEthereum",
         "TeleportCustodySolana"
@@ -106,6 +133,10 @@
     "testnet": {
       "starly-testnet": [
         "StarlyToken"
+      ],
+      "starly-staking-testnet": [
+        "CompoundInterest",
+        "StarlyTokenStaking"
       ],
       "starly-teleport-testnet": [
         "TeleportCustodyBSC",

@@ -1,4 +1,4 @@
-import TeleportCustodyBSC from "../../contracts/flow/teleport/TeleportCustodyBSC.cdc"
+import TeleportCustodyBSC from "../../contracts/flow/contracts/TeleportCustodyBSC.cdc"
 
 transaction(teleportAdmin: Address, allowedAmount: UFix64) {
   prepare(admin: AuthAccount) {

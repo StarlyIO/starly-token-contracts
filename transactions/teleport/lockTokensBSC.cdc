@@ -1,6 +1,6 @@
-import FungibleToken from "../../contracts/flow/token/FungibleToken.cdc"
-import StarlyToken from "../../contracts/flow/token/StarlyToken.cdc"
-import TeleportCustodyBSC from "../../contracts/flow/teleport/TeleportCustodyBSC.cdc"
+import FungibleToken from "../../contracts/flow/contracts/flow/token/FungibleToken.cdc"
+import StarlyToken from "../../contracts/flow/contracts/flow/token/StarlyToken.cdc"
+import TeleportCustodyBSC from "../../contracts/flow/contracts/TeleportCustodyBSC.cdc"
 
 transaction(admin: Address, amount: UFix64, target: String) {
 

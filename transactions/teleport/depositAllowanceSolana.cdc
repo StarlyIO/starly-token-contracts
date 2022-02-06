@@ -1,4 +1,4 @@
-import TeleportCustodySolana from "../../contracts/flow/teleport/TeleportCustodySolana.cdc"
+import TeleportCustodySolana from "../../contracts/flow/contracts/TeleportCustodySolana.cdc"
 
 transaction(teleportAdmin: Address, allowedAmount: UFix64) {
   prepare(admin: AuthAccount) {
