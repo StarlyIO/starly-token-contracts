@@ -20,6 +20,7 @@
 
 import CompoundInterest from "./CompoundInterest.cdc"
 import FungibleToken from "./FungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 import NonFungibleToken from "./NonFungibleToken.cdc"
 import StarlyToken from "./StarlyToken.cdc"
 
@@ -89,8 +90,38 @@ pub contract StarlyTokenStaking: NonFungibleToken {
         pub fun canUnstake(): Bool
     }
 
+    pub struct StakeMetadataView {
+        pub let id: UInt64
+        pub let principal: UFix64
+        pub let stakeTimestamp: UFix64
+        pub let minStakingSeconds: UFix64
+        pub let k: UFix64
+        pub let accumulatedAmount: UFix64
+        pub let canUnstake: Bool
+        pub let unstakingFees: UFix64
+
+        init(
+            id: UInt64,
+            principal: UFix64,
+            stakeTimestamp: UFix64,
+            minStakingSeconds: UFix64,
+            k: UFix64,
+            accumulatedAmount: UFix64,
+            canUnstake: Bool,
+            unstakingFees: UFix64) {
+            self.id = id
+            self.principal = principal
+            self.stakeTimestamp = stakeTimestamp
+            self.minStakingSeconds = minStakingSeconds
+            self.k = k
+            self.accumulatedAmount = accumulatedAmount
+            self.canUnstake = canUnstake
+            self.unstakingFees = unstakingFees
+        }
+    }
+
     // Stake (named as NFT to comply with NonFungibleToken interface) contains the vault with staked tokens
-    pub resource NFT: NonFungibleToken.INFT, StakePublic {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver, StakePublic {
         pub let id: UInt64
         access(contract) let principalVault: @StarlyToken.Vault
         pub let stakeTimestamp: UFix64
@@ -113,11 +144,43 @@ pub contract StarlyTokenStaking: NonFungibleToken {
         // if destroyed we destroy the tokens and decrease totalPrincipalStaked
         destroy() {
             let principalAmount = self.principalVault.balance
+            destroy self.principalVault
             if (principalAmount > 0.0) {
                 StarlyTokenStaking.totalPrincipalStaked = StarlyTokenStaking.totalPrincipalStaked - principalAmount
-                destroy self.principalVault
                 emit TokensBurned(id: self.id, principal: principalAmount)
             }
+        }
+
+        pub fun getViews(): [Type] {
+            return [
+                Type<MetadataViews.Display>(),
+                Type<StakeMetadataView>()
+            ];
+        }
+
+        pub fun resolveView(_ view: Type): AnyStruct? {
+            switch view {
+                case Type<MetadataViews.Display>():
+                    return MetadataViews.Display(
+                        name: "StarlyToken stake #".concat(self.id.toString()),
+                        description: "id: ".concat(self.id.toString())
+                            .concat(", principal: ").concat(self.principalVault.balance.toString())
+                            .concat(", k: ").concat(self.k.toString())
+                            .concat(", stakeTimestamp: ").concat(UInt64(self.stakeTimestamp).toString())
+                            .concat(", minStakingSeconds: ").concat(UInt64(self.minStakingSeconds).toString()),
+                        thumbnail: MetadataViews.HTTPFile(url: ""))
+                case Type<StakeMetadataView>():
+                    return StakeMetadataView(
+                        id: self.id,
+                        principal: self.principalVault.balance,
+                        stakeTimestamp: self.stakeTimestamp,
+                        minStakingSeconds: self.minStakingSeconds,
+                        k: self.k,
+                        accumulatedAmount: self.getAccumulatedAmount(),
+                        canUnstake: self.canUnstake(),
+                        unstakingFees: self.getUnstakingFees())
+            }
+            return nil;
         }
 
         pub fun getPrincipal(): UFix64 {
@@ -172,7 +235,8 @@ pub contract StarlyTokenStaking: NonFungibleToken {
             let seconds = timestamp - self.stakeTimestamp
             if (timestamp < StarlyTokenStaking.unstakingDisabledUntilTimestamp
                 || seconds < self.minStakingSeconds
-                || seconds < StarlyTokenStaking.minStakingSeconds) {
+                || seconds < StarlyTokenStaking.minStakingSeconds
+                || self.stakeTimestamp >= timestamp) {
                 return false
             } else {
                 return true
@@ -194,6 +258,7 @@ pub contract StarlyTokenStaking: NonFungibleToken {
                 StarlyTokenStaking.stakingEnabled: "Staking is disabled"
                 principalVault.balance > 0.0: "Principal cannot be zero"
                 principalVault.balance >= StarlyTokenStaking.minStakePrincipal: "Principal is too small"
+                k <= CompoundInterest.k2000: "K cannot be larger than 2000% APY"
             }
 
             let stake <- create NFT(
@@ -231,6 +296,8 @@ pub contract StarlyTokenStaking: NonFungibleToken {
 
             pre {
                 StarlyTokenStaking.unstakingEnabled: "Unstaking is disabled"
+                k <= CompoundInterest.k2000: "K cannot be larger than 2000% APY"
+                stake.stakeTimestamp < getCurrentBlock().timestamp: "Cannot unstake stake with stakeTimestamp more or equal to current timestamp"
             }
 
             let timestamp = getCurrentBlock().timestamp
@@ -280,6 +347,7 @@ pub contract StarlyTokenStaking: NonFungibleToken {
 
     pub resource interface CollectionPublic {
         pub fun borrowStakePublic(id: UInt64): &StarlyTokenStaking.NFT{StarlyTokenStaking.StakePublic, NonFungibleToken.INFT}
+
         // admin has to have the ability to refund stake
         access(contract) fun refund(id: UInt64, k: UFix64)
     }
@@ -296,7 +364,8 @@ pub contract StarlyTokenStaking: NonFungibleToken {
         NonFungibleToken.Receiver,
         NonFungibleToken.CollectionPublic,
         CollectionPublic,
-        CollectionPrivate {
+        CollectionPrivate,
+        MetadataViews.ResolverCollection {
 
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
@@ -328,6 +397,12 @@ pub contract StarlyTokenStaking: NonFungibleToken {
 
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
             return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+        }
+
+        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
+            let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+            let stake = nft as! &StarlyTokenStaking.NFT
+            return stake as &AnyResource{MetadataViews.Resolver}
         }
 
         access(contract) fun refund(id: UInt64, k: UFix64) {
@@ -437,6 +512,9 @@ pub contract StarlyTokenStaking: NonFungibleToken {
         }
 
         pub fun setK(_ k: UFix64) {
+            pre {
+                k <= CompoundInterest.k200: "Global K cannot be large larger than 200% APY"
+            }
             StarlyTokenStaking.k = k
         }
 
@@ -466,7 +544,7 @@ pub contract StarlyTokenStaking: NonFungibleToken {
         self.minStakingSeconds = 0.0
         self.minStakePrincipal = 0.0
         self.unstakingDisabledUntilTimestamp = 0.0
-        self.k = CompoundInterest.getK(15) // 15% APY for Starly
+        self.k = CompoundInterest.k15 // 15% APY for Starly
 
         self.CollectionStoragePath = /storage/starlyTokenStakingCollection
         self.CollectionPublicPath = /public/starlyTokenStakingCollection

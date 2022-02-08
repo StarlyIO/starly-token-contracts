@@ -19,7 +19,7 @@ Result: {
 }
 ```
 
-* `flow transactions send transactions/staking/admin/set_k.cdc 1.92343800` -- set k to 1500% APY, for testing
+* `flow transactions send transactions/staking/admin/set_k.cdc 0.15119371` -- set k to 200% APY, for testing
 
 ### Staking and unstaking
 
@@ -62,4 +62,4 @@ Result: {
 
 ### Giving custom stake
 
-* `flow transactions send transactions/staking/admin/custom_stake.cdc 0xf8d6e0586b0a20c7 10000.0 5.0 0.0` -- create stake #9 and give to user 0xf8d6e0586b0a20c7
+* `flow transactions send transactions/staking/admin/custom_stake.cdc 0xf8d6e0586b0a20c7 10000.0 0.41899461 0.0` -- create stake #9 and give to user 0xf8d6e0586b0a20c7

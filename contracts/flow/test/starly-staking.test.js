@@ -41,12 +41,14 @@ describe("StarlyTokenStaking contract tests", () => {
         aliceAccount = await getAccountAddress("Alice");
         addressMap = {
             "NonFungibleToken": nftAccount,
+            "MetadataViews": nftAccount,
             "StarlyToken": tokenAccount,
             "CompoundInterest": stakingAccount,
             "StarlyTokenStaking": stakingAccount,
             "TestingUtilities": stakingAccount,
         };
         await shallPass(deployContractByName({to: nftAccount, name: "NonFungibleToken", addressMap}));
+        await shallPass(deployContractByName({to: nftAccount, name: "MetadataViews", addressMap}));
         await shallPass(deployContractByName({to: tokenAccount, name: "StarlyToken", addressMap}));
         await shallPass(deployContractByName({to: stakingAccount, name: "CompoundInterest", addressMap}));
         await shallPass(deployContractByName({to: stakingAccount, name: "TestingUtilities", addressMap}));
@@ -177,16 +179,48 @@ describe("StarlyTokenStaking contract tests", () => {
         expect(await getStarlyTokenBalance(aliceAccount, addressMap)).toBe("998.99317206")
         expect(await getTotalPrincipalStaked(addressMap)).toBe("0.00000000")
         expect(await getTotalInterestPaid(addressMap)).toBe("0.00159400")
+    })
+
+    test("Metadata (Display)", async () => {
+        await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
+        let display = await getMetadataDisplay(aliceAccount, 0, addressMap)
+        expect(display.name).toBe("StarlyToken stake #0")
+        expect(display.description).toBe("id: 0, principal: 100.00000000, k: 0.01923438, stakeTimestamp: 0, minStakingSeconds: 0")
+        expect(display.thumbnail.url).toBe("")
+    });
+
+    test("Metadata (StakeMetadataView)", async () => {
+        await shallPass(setUnstakingFees({
+            signer: stakingAccount,
+            unstakingFee: 0.01,
+            unstakingFlatFee: 0.01,
+            unstakingFeesNotAppliedAfterSeconds: 3600,
+            addressMap}))
+        await shallPass(addSeconds({signer: stakingAccount, seconds: 1000, addressMap}))
+        await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
+        let metadata = await getMetadata(aliceAccount, 0, addressMap)
+        console.log(metadata)
+        expect(metadata.id).toBe(0)
+        expect(metadata.principal).toBe("100.00000000")
+        expect(metadata.stakeTimestamp).toBe('1000.00000000')
+        expect(metadata.minStakingSeconds).toBe('0.00000000')
+        expect(metadata.k).toBe('0.01923438')
+        expect(metadata.accumulatedAmount).toBe('100.00000000')
+        expect(metadata.canUnstake).toBe(false)
+        expect(metadata.unstakingFees).toBe("1.01000000")
     });
 
     test("Admin sets custom k", async () => {
         await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
-        await shallPass(setStakingK({signer: stakingAccount, k: 1.923438, addressMap}))
+        await shallThrow(setStakingK({signer: stakingAccount, k: 1.923438, addressMap}))
+        await shallThrow(setStakingK({signer: stakingAccount, k: 0.41899461, addressMap}))
+        await shallPass(setStakingK({signer: stakingAccount, k: 0.15119371, addressMap}))
+        await shallPass(setStakingK({signer: stakingAccount, k: 0.09539261, addressMap}))
         let [stake2Result] = await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
         expectEvent("StarlyTokenStaking.TokensStaked", stake2Result, {
             id: 1,
             address: aliceAccount,
-            k: "1.92343800",
+            k: "0.09539261",
             principal: "100.00000000",
             stakeTimestamp: "0.00000000",
         })
@@ -221,6 +255,7 @@ describe("StarlyTokenStaking contract tests", () => {
         await shallThrow(stake({signer: aliceAccount, amount: 100, addressMap}))
         await shallPass(enableStaking({signer: stakingAccount, addressMap}))
         await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
+        await shallPass(addSeconds({signer: stakingAccount, seconds: 1, addressMap}))
         await shallPass(disableUnstaking({signer: stakingAccount, addressMap}))
         await shallThrow(unstake({signer: aliceAccount, id: 0, addressMap}))
         await shallPass(enableUnstaking({signer: stakingAccount, addressMap}))
@@ -228,17 +263,24 @@ describe("StarlyTokenStaking contract tests", () => {
     });
 
     test("Admin create custom stake", async () => {
-        let [stakeResult] = await shallPass(createCustomStake({
+        await shallThrow(createCustomStake({
             signer: stakingAccount,
             address: aliceAccount,
             amount: 100,
             k: 1.923438,
             minStakingSeconds: 3600.0,
             addressMap}))
+        let [stakeResult] = await shallPass(createCustomStake({
+            signer: stakingAccount,
+            address: aliceAccount,
+            amount: 100,
+            k: 0.15119371,
+            minStakingSeconds: 3600.0,
+            addressMap}))
         expectEvent("StarlyTokenStaking.TokensStaked", stakeResult, {
             id: 0,
             address: aliceAccount,
-            k: "1.92343800",
+            k: "0.15119371",
             principal: "100.00000000",
             stakeTimestamp: "0.00000000",
             minStakingSeconds: "3600.00000000",
@@ -250,18 +292,18 @@ describe("StarlyTokenStaking contract tests", () => {
         expectEvent("StarlyTokenStaking.TokensUnstaked", unstakeResult, {
             id: 0,
             address: aliceAccount,
-            amount: "100.15956400",
-            interest: "0.15956400",
-            k: "1.92343800",
+            amount: "100.01253200",
+            interest: "0.01253200",
+            k: "0.15119371",
             principal: "100.00000000",
             stakeTimestamp: "0.00000000",
             unstakeTimestamp: "3600.00000000",
             unstakingFees: "0.00000000",
         })
-        expect(await getStarlyTokenBalance(stakingAccount, addressMap)).toBe("899.84043600")
-        expect(await getStarlyTokenBalance(aliceAccount, addressMap)).toBe("1100.15956400")
+        expect(await getStarlyTokenBalance(stakingAccount, addressMap)).toBe("899.98746800")
+        expect(await getStarlyTokenBalance(aliceAccount, addressMap)).toBe("1100.01253200")
         expect(await getTotalPrincipalStaked(addressMap)).toBe("0.00000000")
-        expect(await getTotalInterestPaid(addressMap)).toBe("0.15956400")
+        expect(await getTotalInterestPaid(addressMap)).toBe("0.01253200")
     });
 
     test("Admin refund", async () => {
@@ -308,18 +350,7 @@ describe("StarlyTokenStaking contract tests", () => {
 
     test("Tricky case: stake and unstake at the same time", async () => {
         await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
-        let [unstakeResult] = await shallPass(unstake({signer: aliceAccount, id: 0, addressMap}))
-        expectEvent("StarlyTokenStaking.TokensUnstaked", unstakeResult, {
-            id: 0,
-            address: aliceAccount,
-            amount: "100.00000000",
-            interest: "0.00000000",
-            k: "0.01923438",
-            principal: "100.00000000",
-            stakeTimestamp: "0.00000000",
-            unstakeTimestamp: "0.00000000",
-            unstakingFees: "0.00000000",
-        })
+        await shallThrow(unstake({signer: aliceAccount, id: 0, addressMap}))
     });
 
     test("Tricky case: try to tamper principal", async () => {
@@ -358,14 +389,14 @@ describe("StarlyTokenStaking contract tests", () => {
 
     test("Tricky case: non-admin tries admin operations", async () => {
         await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
-        await shallThrow(setStakingK({signer: aliceAccount, k: 1.923438, addressMap}))
+        await shallThrow(setStakingK({signer: aliceAccount, k: 1.0, addressMap}))
         await shallThrow(refund({signer: aliceAccount, address: aliceAccount, id: 0, addressMap}))
         await shallThrow(refundCustomK({signer: aliceAccount, address: aliceAccount, id: 0, k: 50, addressMap}))
         await shallThrow(createCustomStake({
             signer: aliceAccount,
             address: aliceAccount,
             amount: 100,
-            k: 1.923438,
+            k: 1.0,
             minStakingSeconds: 3600.0,
             addressMap}))
         await shallThrow(enableStaking({signer: aliceAccount, addressMap}))
@@ -517,4 +548,12 @@ async function getTotalPrincipalStaked(addressMap) {
 
 async function getTotalInterestPaid(addressMap) {
     return await script("../../../scripts/staking/read_total_interest_paid.cdc", [], addressMap)
+}
+
+async function getMetadata(account, id, addressMap) {
+    return await script("../../../scripts/staking/read_metadata.cdc", [account, id], addressMap)
+}
+
+async function getMetadataDisplay(account, id, addressMap) {
+    return await script("../../../scripts/staking/read_metadata_display.cdc", [account, id], addressMap)
 }

@@ -20,6 +20,13 @@
         "mainnet": "0xf233dcee88fe0abe"
       }
     },
+    "MetadataViews": {
+      "source": "./contracts/flow/contracts/MetadataViews.cdc",
+      "aliases": {
+        "testnet": "0x631e88ae7f1d7c20",
+        "mainnet": "0x1d7e57aa55817448"
+      }
+    },
     "NonFungibleToken": {
       "source": "./contracts/flow/contracts/NonFungibleToken.cdc",
       "aliases": {
@@ -122,6 +129,7 @@
     "emulator": {
       "starly-emulator": [
         "CompoundInterest",
+        "MetadataViews",
         "NonFungibleToken",
         "StarlyToken",
         "StarlyTokenStaking",

@@ -24,8 +24,11 @@ pub contract CompoundInterest {
 
     access(self) let magic_factors: [[UFix64; 10]; 8]
     access(self) let powers_of_10: [UFix64; 12]
-    access(self) let t: UFix64
-    access(self) let ks: [UFix64; 41]
+    access(self) let ks: [UFix64; 101]
+    pub let k15: UFix64 // k for 15% APY
+    pub let k100: UFix64 // k for 100% APY
+    pub let k200: UFix64 // k for 200% APY
+    pub let k2000: UFix64 // k for 2000% APY
 
     init() {
 
@@ -63,20 +66,19 @@ pub contract CompoundInterest {
 
         // For Starly we want APY to be 15%. So the numbers below are for that number.
         //
-        // With given parameters if you put 1 $STARLY for 1 year (31556952 seconds), you would get 1.14999997 and the end.
+        // With given parameters if you put 1 $STARLY for 1 year (31556952 seconds), you would get 1.14999997 at the end.
         // Precision should be enough. Same math (using math.pow and math.log10) would give 1.150000001904556 in Python.
         //
         // Python snippets to get the numbers:
         // import math
-        // interest = 1.15 # equivalen of annual percent
+        // interest = 1.15 # equivalent of annual percent
         // t = 31556952 # seconds in year
         // r = math.pow(interest, 1/t) - 1 # 4.428879707418787e-09 -- per-second interest ratio
         // k = math.log10(1+r) # 1.9234380136859298e-09
         //
         // Cadence UFix64 lacks precision, so we will do some scaling
-        self.t = 31556952.0 / 10000000.0 // divide time by 10^7
-
-        // doing ks for 0-40%, calculated using this Python snippet:
+        //
+        // doing ks for 0-100%, calculated using this Python snippet:
         // import math
         // t = 31556952
         // for i in range(41):
@@ -89,7 +91,7 @@ pub contract CompoundInterest {
             0.00000000,
             0.00136939,
             0.00272529,
-            0.00406795,
+            0.00406795, // 3% APY
             0.00539765,
             0.00671462,
             0.00801911,
@@ -101,7 +103,7 @@ pub contract CompoundInterest {
             0.01559657,
             0.01681989,
             0.01803243,
-            0.01923438, // k15
+            0.01923438, // 15% APY
             0.02042592,
             0.02160724,
             0.02277850,
@@ -116,7 +118,7 @@ pub contract CompoundInterest {
             0.03289409,
             0.03397349,
             0.03504448,
-            0.03610721,
+            0.03610721, // 30% APY
             0.03716179,
             0.03820836,
             0.03924702,
@@ -126,8 +128,73 @@ pub contract CompoundInterest {
             0.04332502,
             0.04432592,
             0.04531959,
-            0.04630613
+            0.04630613,
+            0.04728565,
+            0.04825825,
+            0.04922403,
+            0.05018308,
+            0.05113548,
+            0.05208135,
+            0.05302075,
+            0.05395379,
+            0.05488054,
+            0.05580110,
+            0.05671554,
+            0.05762394,
+            0.05852638,
+            0.05942295,
+            0.06031371,
+            0.06119875,
+            0.06207813,
+            0.06295192,
+            0.06382021,
+            0.06468305,
+            0.06554051,
+            0.06639266,
+            0.06723957,
+            0.06808131,
+            0.06891792,
+            0.06974948,
+            0.07057604,
+            0.07139767,
+            0.07221442,
+            0.07302636,
+            0.07383353,
+            0.07463599,
+            0.07543381,
+            0.07622702,
+            0.07701569,
+            0.07779987,
+            0.07857960,
+            0.07935494,
+            0.08012594,
+            0.08089264,
+            0.08165509,
+            0.08241334,
+            0.08316744,
+            0.08391743,
+            0.08466335,
+            0.08540525,
+            0.08614318,
+            0.08687716,
+            0.08760726,
+            0.08833350,
+            0.08905593,
+            0.08977459,
+            0.09048951,
+            0.09120074,
+            0.09190831,
+            0.09261226,
+            0.09331263,
+            0.09400946,
+            0.09470277,
+            0.09539261 // 100% APY
         ]
+
+        self.k15 = self.ks[15]
+        self.k100 = self.ks[100]
+        self.k200 = 0.15119371
+        self.k2000 = 0.41899461
     }
 
     pub fun getK(_ i: UInt8): UFix64 {
