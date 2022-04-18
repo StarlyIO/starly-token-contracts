@@ -199,7 +199,6 @@ describe("StarlyTokenStaking contract tests", () => {
         await shallPass(addSeconds({signer: stakingAccount, seconds: 1000, addressMap}))
         await shallPass(stake({signer: aliceAccount, amount: 100, addressMap}))
         let metadata = await getMetadata(aliceAccount, 0, addressMap)
-        console.log(metadata)
         expect(metadata.id).toBe(0)
         expect(metadata.principal).toBe("100.00000000")
         expect(metadata.stakeTimestamp).toBe('1000.00000000')

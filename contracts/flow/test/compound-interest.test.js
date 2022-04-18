@@ -7,7 +7,6 @@ import {
     getTemplate,
     init,
     shallPass,
-    shallThrow,
 } from "flow-js-testing";
 
 // Increase timeout if your tests failing due to timeout

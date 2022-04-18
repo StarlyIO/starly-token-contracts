@@ -14,7 +14,7 @@
     "@babel/preset-env": "^7.16.11",
     "@types/lodash": "^4.14.178",
     "babel-jest": "^27.4.6",
-    "flow-js-testing": "^0.2.2",
+    "flow-js-testing": "^0.2.3-alpha.4",
     "jest": "^27.4.7",
     "jest-environment-node": "^27.4.6",
     "lodash": "^4.17.21"

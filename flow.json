@@ -44,7 +44,15 @@
     "StarlyTokenStaking": {
       "source": "./contracts/flow/contracts/StarlyTokenStaking.cdc",
       "aliases": {
-        "testnet": "0x8d1cf508d398c5c2"
+        "testnet": "0x8d1cf508d398c5c2",
+        "mainnet": "0x76a9b420a331b9f0"
+      }
+    },
+    "StarlyTokenVesting": {
+      "source": "./contracts/flow/contracts/StarlyTokenVesting.cdc",
+      "aliases": {
+        "testnet": "0x8d1cf508d398c5c2",
+        "mainnet": "0xee2f049f0ba04f0e"
       }
     },
     "TeleportCustodyBSC": {
@@ -70,18 +78,9 @@
     }
   },
   "networks": {
-    "emulator": {
-      "host": "127.0.0.1:3569",
-      "chain": "flow-emulator"
-    },
-    "testnet": {
-      "host": "access.devnet.nodes.onflow.org:9000",
-      "chain": "flow-testnet"
-    },
-    "mainnet": {
-      "host": "access.mainnet.nodes.onflow.org:9000",
-      "chain": "flow-mainnet"
-    }
+    "emulator": "127.0.0.1:3569",
+    "mainnet": "access.mainnet.nodes.onflow.org:9000",
+    "testnet": "access.devnet.nodes.onflow.org:9000"
   },
   "accounts": {
     "emulator-account": {
@@ -101,28 +100,23 @@
     },
     "starly-testnet": {
       "address": "0xf63219072aaddd50",
-      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
-      "chain": "flow-testnet"
+      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67"
     },
     "starly-staking-testnet": {
       "address": "0x8d1cf508d398c5c2",
-      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
-      "chain": "flow-testnet"
+      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67"
     },
     "starly-testnet-holder": {
       "address": "0x2c662219431fe24b",
-      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67",
-      "chain": "flow-testnet"
+      "keys": "f4ccab85b4764e5c5bdd3ce823bd4d1ba484a12b79e8fafe17113467c72fdf67"
     },
     "starly-teleport-testnet": {
       "address": "0xe0667c34b3a9d731",
-      "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a",
-      "chain": "flow-testnet"
+      "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a"
     },
     "starly-teleport-admin-testnet": {
       "address": "0xf086a545ce3c552d",
-      "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a",
-      "chain": "flow-testnet"
+      "keys": "8d5c6572339d0154bb9c323daa40807a9d7cd5ec435cbb9417b44cc92778980a"
     }
   },
   "deployments": {
