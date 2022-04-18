@@ -1,7 +1,7 @@
-import FungibleToken from 0xf233dcee88fe0abe
-import MetadataViews from 0x1d7e57aa55817448
-import NonFungibleToken from 0x1d7e57aa55817448
-import StarlyToken from 0x142fa6570b62fd97
+import FungibleToken from "FungibleToken.cdc"
+import MetadataViews from "MetadataViews.cdc"
+import NonFungibleToken from "NonFungibleToken.cdc"
+import StarlyToken from "StarlyToken.cdc"
 
 pub contract StarlyTokenVesting: NonFungibleToken {
 
